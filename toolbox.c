@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/01 18:04:54 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/09 17:41:18 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/11 14:12:55 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,17 @@ long ft_atoi_base_spe(char **str, const char *base)
 	base_nb = ft_strlen(base);
 	while (**str == '\f' || **str == '\t' || **str == ' ' || **str == '\n'
 			|| **str == '\r' || **str == '\v')
-		**str += 1;
+		*str += 1;
 	if (**str == '-' || **str == '+')
 	{
 		if (**str == '-')
 			sign = -1;
-		**str += 1;
+		*str += 1;
 	}
 	while ((c_idx = ft_csearch(**str, base)) >= 0)
 	{
 		nb = nb * base_nb + c_idx;
-		**str += 1;
+		*str += 1;
 	}
 	return (sign * nb);
 }
@@ -97,17 +97,17 @@ int	ft_atoi_spe(char **str)
 	sign = 1;
 	while (**str == '\f' || **str == '\t' || **str == ' ' || **str == '\n'
 			|| **str == '\r' || **str == '\v')
-		**str += 1;
+		*str += 1;
 	if (**str == '-' || **str == '+')
 	{
 		if (**str == '-')
 			sign = -1;
-		**str += 1;
+		*str += 1;
 	}
 	while (ft_isdigit(**str))
 	{
 		nb = nb * 10 + (int)(**str - '0');
-		**str += 1;
+		*str += 1;
 	}
 	return (sign * nb);
 }

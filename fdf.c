@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/27 16:07:55 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/11 01:11:30 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/11 19:01:56 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ int		main(int ac, char **av)
 	i = 0;
 	j = 0;
 	printf("w : %d\n", pm.map->w); 
-	while (i < 10)
+	while (i < pm.map->h)
 	{
-		while (j < 10)
+		j = 0;
+		while (j < pm.map->w)
 		{
 			ft_putnbr(map[i][j].z);
 			ft_putchar(' ');

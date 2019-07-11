@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 01:04:51 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/11 01:15:28 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/11 19:06:26 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ static t_line		*store_count_lines(int fd, long *j)
 
 	line = NULL;
 	head = NULL;
+	if ((gnl = get_next_line(fd, &line)))
+		head = new_line(line);
+	gnl_error(gnl, line, head);
+	node = head;
+	*j += 1;
 	while ((gnl = get_next_line(fd, &line)))
 	{
-		printf("line : ()%s()\n", line);
-		node = new_line(line);
-		if (*j == 0)
-			head = node;
+		node->next = new_line(line);
 		node = node->next;
 		*j += 1;
 	}
@@ -77,18 +79,21 @@ static int		atoptl(char *line, t_pt *pts, int expect_i)
 	i = 0;
 	while (*line)
 	{
+		while (*line && *line == SEP)
+			line++;
 		pts[i].z = ft_atoi_spe(&line); 
+		pts[i].color = 0;
 		if (*line == SEPX)
 		{
-			if (!(*line + 1 == '0' && *line + 2 == 'X'))
+			if (!(*line + 1 == '0' && *line + 2 == 'x'))
 				return (0);
 			*line += 2;
 			pts[i].color = ft_atoi_base_spe(&line, "0123456789ABCDEF");
-			while (*line && *line != SEP)
-				line++;
 		}
 		if (pts[i].color > INT_MAX || pts[i].z < INT_MIN || pts[i].z > INT_MAX)
 			return (0);
+		while (*line && *line == SEP)
+			line++;
 		i++;
 	}
 	if (i != expect_i)
@@ -112,28 +117,27 @@ static int		split_and_putaway(char *line, t_map *map, int j)
 	char 		*p_line;
 	long		i;
 
-	//printf("line : ()%s()\n", line);
 	i = 0;
 	p_line = line;
 	while (*p_line == SEP)
 		p_line++;
 	while (*p_line)
 	{
-		i = (*p_line != SEP && *(p_line + 1) == SEP)? (i + 1) : i;	
+		if (*p_line != SEP && ((*(p_line + 1) == SEP || !*(p_line + 1))))
+			i++;
 		p_line++;
 	}
 	if (i < 2)
-		return (0);
+		return (ONECOL);
 	if (i > INT_MAX)
-		return (-1);
-	printf("cc\n");
+		return (WNOINT);
 	if (map->w != 0 && (int)i != map->w)
-		return (-2);
-	if (!(map->pts[j] == (t_pt *)malloc(sizeof(t_pt) * i)))
-		return (-3);
+		return (NOTRECT);
+	if (!(map->pts[j] = (t_pt *)malloc(sizeof(t_pt) * i)))
+		return (LINEALOC);
 	map->w = i;
 	if (!(atoptl(line, map->pts[j], map->w)))
-		return (-4);
+		return (INVDATA);
 	return (1);
 }
 
@@ -149,12 +153,9 @@ int		parsing(char *fname, t_param *pm)
 		ext_error("fail to open");
 	head = file_read(fd, pm);
 	node = head;
-	printf("node address : %p\n", node);
 	j = 0;
 	while (node)
 	{
-		printf("node->line : |%s|\n", node->line);
-		printf("j : %d\n", j);
 		try_split(split_and_putaway(node->line, pm->map, j), pm->map, head);
 		node = node->next;
 		j++;

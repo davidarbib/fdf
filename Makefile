@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/16 21:25:30 by darbib            #+#    #+#              #
-#    Updated: 2019/07/08 17:10:11 by darbib           ###   ########.fr        #
+#    Updated: 2019/07/11 12:06:10 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ LIBS := $(LIBFT)/libft.a
 CFLAGS_MACOS := -I $(HDIR) \
 			   	-I $(MLX) \
 			   	-I $(HLIBFT) \
-				-c -Wall -Werror -Wextra
+				-c -Wall -Werror -Wextra \
+				-g
 LFLAGS := -o $(EXE) -Wall -Werror -Wextra
 FMW := 	-lmlx -L $(MLX) \
 		-framework OpenGL \
