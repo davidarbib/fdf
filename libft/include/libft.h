@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/19 10:30:27 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/06 21:06:27 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/29 15:29:02 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef	struct	s_list
 	size_t			content_size;
 	struct s_list	*next;
 }				t_list;
+
 void			*ft_memset(void *b, int c, size_t len);
 void			ft_bzero(void *s, size_t n);
 void			*ft_memcpy(void *dst, const void *src, size_t n);
@@ -90,4 +91,5 @@ char			*ft_strjoinfree(char **p_s1, char **p_s2,
 char			*ft_strmove(char **s1);
 int				ft_csearch(char c, const char *str);
 long			ft_atoi_base(const char *str, const char *base);
+void			*ft_realloc(void *area, size_t size, size_t size_ad);
 #endif

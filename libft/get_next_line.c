@@ -6,56 +6,84 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 18:51:59 by darbib            #+#    #+#             */
-/*   Updated: 2019/06/27 15:54:00 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/30 18:14:46 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/libft.h"
 #include "include/get_next_line.h"
 
-static int	rd_join_sk(int fd, char **line, char **p_eol)
+static int		init_gnl(char **after_eol, char **line, int *eol)
 {
-	char	*buf;
-	int		bytes_rd;
+	char *eol_addr;
 
-	bytes_rd = 1;
-	while (!(*p_eol) && bytes_rd)
+	*line = NULL;
+	if (!*after_eol)
 	{
-		if (!(buf = ft_strnew(BUFF_SIZE)))
-			return (-1);
-		if ((bytes_rd = read(fd, buf, BUFF_SIZE)) == -1)
-			return (-1);
-		buf[bytes_rd] = '\0';
-		*line = ft_strjoinfree(line, &buf, 3);
-		*p_eol = ft_strchr(*line, '\n');
+		if (!(*line = ft_strdup("")))
+			return (0);
 	}
-	return (bytes_rd);
+	else
+	{
+		if (!(*line = ft_strdup(*after_eol)))
+			return (0);
+		ft_strdel(after_eol);
+		if (!*line)
+			return (0);
+		if ((eol_addr = ft_strchr(*line, '\n')))
+			*eol = eol_addr - *line; 
+	}
+	return (1);
 }
 
-int			get_next_line(int fd, char **line)
+static int		rd(int fd, int *eol, char **line)
 {
-	static char *since_eol;
-	char		*p_eol;
-	int			bytes_rd;
+	char	buf[BUFF_SIZE];
+	int 	ret;
+	int 	i;
+	int 	d;
 
-	if (!line || fd < 0 || BUFF_SIZE < 1)
+	if ((ret = read(fd, buf, BUFF_SIZE)) == -1)
 		return (-1);
-	p_eol = NULL;
-	*line = NULL;
-	if (since_eol)
-	{
-		*line = ft_strmove(&since_eol);
-		p_eol = ft_strchr(*line, '\n');
-	}
-	bytes_rd = rd_join_sk(fd, line, &p_eol);
-	if ((bytes_rd) == -1)
+	if (!(*line = ft_realloc(*line, ft_strlen(*line) + 1, ret)))
 		return (-1);
-	if (p_eol)
+	d = 0;
+	while ((*line)[d])
+		d++;
+	i = -1;
+	while (++i < ret)
 	{
-		(*line)[p_eol - *line] = '\0';
-		since_eol = ft_strdup(p_eol + 1);
+		if (*eol < 0 && buf[i] == '\n')
+			*eol = i + d;
+		(*line)[i + d] = buf[i]; 
 	}
-	if (!(**line) && !since_eol)
-		return (0);
-	return (1);
+	(*line)[i + d] = 0;
+	return (ret);
+}
+
+int				get_next_line(int fd, char **line)
+{
+	static char		*after_eol; 
+	size_t			ret;
+	int				eol;
+
+	if (fd < 0 || !line || BUFF_SIZE < 1)
+		return (-1);
+	eol = -1;
+	if (!(init_gnl(&after_eol, line, &eol)))
+		return (-1);
+	ret = 1;
+	while (eol < 0 && ret > 0)
+	{
+		if ((ret = rd(fd, &eol, line)) == -1)
+			return (-1);
+	}
+	if (eol >= 0)
+	{
+		if (!(after_eol = ft_strdup(*line + eol + 1)))
+			return (-1);
+		(*line)[eol] = 0;
+		return (1); 
+	}
+	return (0);
 }

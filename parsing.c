@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 01:04:51 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/11 19:06:26 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/30 23:41:05 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static t_line		*store_count_lines(int fd, long *j)
 		node = node->next;
 		*j += 1;
 	}
+	ft_strdel(&line);
 	gnl_error(gnl, line, head);
 	height_error(*j, line, head);
 	return (head);
@@ -59,7 +60,7 @@ static t_line		*file_read(int fd, t_param *pm)
 	}
 	if (!(pm->map->pts = (t_pt **)malloc(sizeof(t_pt *) * j)))
 	{
-		del_map(&(pm->map));
+		del_map(pm->map, -1);
 		del_lines(head);
 		ext_error("pts allocation error");
 	}
@@ -85,9 +86,7 @@ static int		atoptl(char *line, t_pt *pts, int expect_i)
 		pts[i].color = 0;
 		if (*line == SEPX)
 		{
-			if (!(*line + 1 == '0' && *line + 2 == 'x'))
-				return (0);
-			*line += 2;
+			line += 3;
 			pts[i].color = ft_atoi_base_spe(&line, "0123456789ABCDEF");
 		}
 		if (pts[i].color > INT_MAX || pts[i].z < INT_MIN || pts[i].z > INT_MAX)
@@ -136,13 +135,13 @@ static int		split_and_putaway(char *line, t_map *map, int j)
 	if (!(map->pts[j] = (t_pt *)malloc(sizeof(t_pt) * i)))
 		return (LINEALOC);
 	map->w = i;
-	if (!(atoptl(line, map->pts[j], map->w)))
+	if (!is_valid_data(line) || !(atoptl(line, map->pts[j], map->w)))
 		return (INVDATA);
 	return (1);
 }
 
 
-int		parsing(char *fname, t_param *pm)
+void	parsing(char *fname, t_param *pm)
 {
 	int		fd;
 	int		j;
@@ -156,9 +155,8 @@ int		parsing(char *fname, t_param *pm)
 	j = 0;
 	while (node)
 	{
-		try_split(split_and_putaway(node->line, pm->map, j), pm->map, head);
+		try_split(split_and_putaway(node->line, pm->map, j), pm, head, j);
 		node = node->next;
 		j++;
 	}
-	return (1);
 }

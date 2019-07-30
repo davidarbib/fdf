@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
+#    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/16 21:25:30 by darbib            #+#    #+#              #
-#    Updated: 2019/07/11 12:06:10 by darbib           ###   ########.fr        #
+#    Updated: 2019/07/30 23:32:46 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,13 @@ CFLAGS_MACOS := -I $(HDIR) \
 			   	-I $(MLX) \
 			   	-I $(HLIBFT) \
 				-c -Wall -Werror -Wextra \
-				-g
+				-g3
 LFLAGS := -o $(EXE) -Wall -Werror -Wextra
-FMW := 	-lmlx -L $(MLX) \
+#FMW := 	-lmlx -L $(MLX) \
 		-framework OpenGL \
 		-framework AppKit \
 
-SRC := fdf.c hook.c parsing.c toolbox.c error.c 
+SRC := fdf.c hook.c parsing.c toolbox.c check_line.c error.c 
 OBJ := $(SRC:.c=.o)
 
 # **************************************************************************** #

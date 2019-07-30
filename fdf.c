@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/27 16:07:55 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/11 19:01:56 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/30 23:43:48 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,11 @@ int		main(int ac, char **av)
 	if (!init_fdf(&pm))
 		//gestion erreur initialisation
 		return (1);
-	if (!parsing(av[1], &pm))
-		//erreur de parsing
-		return (1);
-	printf("cc\n");
+	parsing(av[1], &pm);
+	//displayloop(pm);
 	map = pm.map->pts;  
 	i = 0;
 	j = 0;
-	printf("w : %d\n", pm.map->w); 
 	while (i < pm.map->h)
 	{
 		j = 0;
@@ -55,9 +52,25 @@ int		main(int ac, char **av)
 		ft_putchar('\n');
 		i++;
 	}
+	printf("---------------\n\n\n");
+	i = 0;
+	while (i < pm.map->h)
+	{
+		j = 0;
+		while (j < pm.map->w)
+		{
+			ft_putnbr(map[i][j].color);
+			ft_putchar(' ');
+			j++;
+		}
+		ft_putchar('\n');
+		i++;
+	}
+	/*
 	mlx_string_put(pm.sk, pm.wd, 0, 0, 0xFF0000, "coucou");
 	mlx_hook(pm.wd, EV_KEY_PRESS, 0, key_hk, &pm);
 	mlx_hook(pm.wd, EV_MOUSE_PRESS, 0, ms_hk, &pm);
 	mlx_loop(pm.sk);
+	*/
 	return (0);
 }

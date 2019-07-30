@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: darbib <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/02 21:48:05 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/30 15:37:04 by darbib           ###   ########.fr       */
+/*   Created: 2019/07/15 23:39:17 by darbib            #+#    #+#             */
+/*   Updated: 2019/07/30 15:33:47 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "include/libft.h"
 
-void	ft_memdel(void **ap)
+void	*ft_realloc(void *area, size_t size, size_t size_ad)
 {
-	if (ap && *ap)
-	{
-		free(*ap);
-		*ap = NULL;
-	}
+	void 	*area_pp;
+
+	if (!(area_pp = ft_memalloc(size + size_ad)))
+		return (NULL);
+	ft_memmove(area_pp, area, size);
+	ft_memdel(&area);
+	return (area_pp);
 }

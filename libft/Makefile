@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/16 21:25:30 by darbib            #+#    #+#              #
-#    Updated: 2019/07/06 20:03:37 by darbib           ###   ########.fr        #
+#    Updated: 2019/07/27 15:06:57 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,7 +76,8 @@ SRC = ft_isalpha.c \
 		ft_strmove.c \
 		ft_atoi_base.c \
 		ft_csearch.c \
-		get_next_line.c
+		get_next_line.c \
+		ft_realloc.c
 
 OBJ := $(SRC:.c=.o)
 HDIR := include

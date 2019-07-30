@@ -2,10 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */ /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
+/*                                                    +:+ +:+         +:+     */
+/*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/22 21:23:16 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/08 23:39:19 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/30 22:02:25 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +67,7 @@ typedef struct	s_param
 {
 	void		*sk;
 	void		*wd;
-	t_map		*map;	
+	t_map		*map;
 }				t_param;
 
 /*
@@ -90,10 +91,11 @@ int		parsing(char *fname, t_param *pm);
 void	ext_error(char *msg);
 void	gnl_error(int gnl, char *line, t_line *head);
 void	height_error(long j, char *line, t_line *head);
-void	try_split(int error, t_map *map, t_line *head);
+void	try_split(int error, t_param *pm, t_line *head, int j);
 void	del_lines(t_line *head);
-void	del_map(t_map **map);
+void	del_map(t_map *map, int j);
 t_line	*new_line(char *line);
+int		is_valid_data(char *line);
 
 /* 
 ** --- events codes ---
@@ -109,7 +111,7 @@ t_line	*new_line(char *line);
 # define WIDTH	800
 # define HEIGHT	400
 # define SEP	' '
-# define SEPX	';'
+# define SEPX	','
 
 /*
 ** --- error codes in split ---

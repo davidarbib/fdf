@@ -6,25 +6,22 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/01 18:04:54 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/11 14:12:55 by darbib           ###   ########.fr       */
+/*   Updated: 2019/07/30 19:30:21 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "include/fdf.h"
 
-void	del_map(t_map **map)
+void	del_map(t_map *map, int j)
 {
-	int j;
-
-	j = 0;
-	while (j < (*map)->h)
+	while (j > -1)
 	{
-		free((*map)->pts[j]);
-		j++;
+		free(map->pts[j]);
+		j--;
 	}
-	free((*map)->pts);
-	free(*map);
+	free(map->pts);
+	free(map);
 }
 
 void	del_lines(t_line *head)
@@ -109,5 +106,7 @@ int	ft_atoi_spe(char **str)
 		nb = nb * 10 + (int)(**str - '0');
 		*str += 1;
 	}
+	while (!(ft_isdigit(**str)) && **str && **str != SEP && **str != SEPX)
+		*str += 1;
 	return (sign * nb);
 }
