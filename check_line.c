@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/30 19:35:10 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/30 23:31:00 by darbib           ###   ########.fr       */
+/*   Updated: 2019/08/17 18:07:21 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,34 @@ static int		check_hex(char **line)
 	return (1);
 }
 
-int				is_valid_data(char *line)
+char			*is_valid_data(t_line *head, char *line)
 {
+	char	*b_line;
+	int		nb_dig;	
+
+	if ((!line || !(*line)) && !(head->line))
+		data_error(head, line);	
+	nb_dig = 0;
+	b_line = line;
 	while (*line)
 	{
+		if (*line == SEP || *line == SEPX)
+			nb_dig = 0;
+		if (ft_isdigit(*line))
+			nb_dig++;
+		if (nb_dig > 11)
+			data_error(head, b_line);	
 		if (*line == '-' && !ft_isdigit(*(line + 1)))
-			return (0);	
+			data_error(head, b_line);	
 		if (!ft_isdigit(*line) && *line != SEP && *line != SEPX && *line != '-') 
-			return (0);
+			data_error(head, b_line);	
 		if (!(check_hex(&line)))
-			return (0);
+			data_error(head, b_line);	
 		if (!*line)
 			break;
 		line++;
 	}
-	return (1);
+	return (b_line);
 }
 
 /*

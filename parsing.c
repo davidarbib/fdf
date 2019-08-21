@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 01:04:51 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/30 23:41:05 by darbib           ###   ########.fr       */
+/*   Updated: 2019/08/19 16:36:16 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ static t_line		*store_count_lines(int fd, long *j)
 
 	line = NULL;
 	head = NULL;
-	if ((gnl = get_next_line(fd, &line)))
-		head = new_line(line);
+	if ((gnl = get_next_line(fd, &line)) > 0)
+		head = new_line(is_valid_data(NULL, line));
 	gnl_error(gnl, line, head);
 	node = head;
 	*j += 1;
-	while ((gnl = get_next_line(fd, &line)))
+	while ((gnl = get_next_line(fd, &line)) > 0)
 	{
-		node->next = new_line(line);
+		node->next = new_line(is_valid_data(head, line));
 		node = node->next;
 		*j += 1;
 	}
@@ -89,7 +89,8 @@ static int		atoptl(char *line, t_pt *pts, int expect_i)
 			line += 3;
 			pts[i].color = ft_atoi_base_spe(&line, "0123456789ABCDEF");
 		}
-		if (pts[i].color > INT_MAX || pts[i].z < INT_MIN || pts[i].z > INT_MAX)
+		if (pts[i].color < 0 || pts[i].color > INT_MAX || pts[i].z < INT_MIN
+			|| pts[i].z > INT_MAX)
 			return (0);
 		while (*line && *line == SEP)
 			line++;
@@ -135,11 +136,10 @@ static int		split_and_putaway(char *line, t_map *map, int j)
 	if (!(map->pts[j] = (t_pt *)malloc(sizeof(t_pt) * i)))
 		return (LINEALOC);
 	map->w = i;
-	if (!is_valid_data(line) || !(atoptl(line, map->pts[j], map->w)))
+	if (!(atoptl(line, map->pts[j], map->w)))
 		return (INVDATA);
 	return (1);
 }
-
 
 void	parsing(char *fname, t_param *pm)
 {
@@ -159,4 +159,5 @@ void	parsing(char *fname, t_param *pm)
 		node = node->next;
 		j++;
 	}
+	del_lines(head);
 }

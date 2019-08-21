@@ -6,7 +6,7 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/22 21:23:16 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/30 22:02:25 by darbib           ###   ########.fr       */
+/*   Updated: 2019/08/17 17:34:07 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,12 @@ typedef struct	s_param
 {
 	void		*sk;
 	void		*wd;
+	void		*im;
+	char		*im_addr;
 	t_map		*map;
+	int			bpp;
+	int			ln_sz;
+	int			endian;
 }				t_param;
 
 /*
@@ -76,26 +81,33 @@ typedef struct	s_param
 */
 
 int		exp_hk(void *param);
-int		key_hk(int keycode, void *param);
+int		key_hk(int keycode, t_param *param);
 int		ms_hk(int button, int x,int y, void *param);
 int		lp_hk(void *param);
+
+/*
+** ----- parsing specific -----
+*/
+
+int		ft_atoi_spe(char **str);
+long 	ft_atoi_base_spe(char **str, const char *base);
+void	parsing(char *fname, t_param *pm);
+void	ext_error(char *msg);
+void	gnl_error(int gnl, char *line, t_line *head);
+void	height_error(long j, char *line, t_line *head);
+void	try_split(int win_i, t_param *pm, t_line *head, int j);
+void	del_lines(t_line *head);
+t_line	*new_line(char *line);
+char	*is_valid_data(t_line *head, char *line);
+void	data_error(t_line *head, char *line);
 
 /*
 ** ----------------------------------
 */
 
-
-int		ft_atoi_spe(char **str);
-long 	ft_atoi_base_spe(char **str, const char *base);
-int		parsing(char *fname, t_param *pm);
-void	ext_error(char *msg);
-void	gnl_error(int gnl, char *line, t_line *head);
-void	height_error(long j, char *line, t_line *head);
-void	try_split(int error, t_param *pm, t_line *head, int j);
-void	del_lines(t_line *head);
 void	del_map(t_map *map, int j);
-t_line	*new_line(char *line);
-int		is_valid_data(char *line);
+void	color_chars(unsigned int color, char *str);
+void	alter_pixel(t_param *pm, unsigned int color, int x, int y);
 
 /* 
 ** --- events codes ---

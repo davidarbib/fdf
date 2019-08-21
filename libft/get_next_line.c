@@ -6,12 +6,13 @@
 /*   By: darbib <darbib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 18:51:59 by darbib            #+#    #+#             */
-/*   Updated: 2019/07/30 18:14:46 by darbib           ###   ########.fr       */
+/*   Updated: 2019/08/19 16:12:48 by darbib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/libft.h"
 #include "include/get_next_line.h"
+#include <stdio.h>
 
 static int		init_gnl(char **after_eol, char **line, int *eol)
 {
@@ -38,14 +39,16 @@ static int		init_gnl(char **after_eol, char **line, int *eol)
 
 static int		rd(int fd, int *eol, char **line)
 {
-	char	buf[BUFF_SIZE];
+	char	buf[BUFF_SIZE + 1];
 	int 	ret;
 	int 	i;
 	int 	d;
 
 	if ((ret = read(fd, buf, BUFF_SIZE)) == -1)
 		return (-1);
-	if (!(*line = ft_realloc(*line, ft_strlen(*line) + 1, ret)))
+	buf[BUFF_SIZE] = 0;
+	if ((ret && (int)ft_strlen(buf) != ret) 
+		|| !(*line = ft_realloc(*line, ft_strlen(*line) + 1, ret)))
 		return (-1);
 	d = 0;
 	while ((*line)[d])
@@ -53,6 +56,8 @@ static int		rd(int fd, int *eol, char **line)
 	i = -1;
 	while (++i < ret)
 	{
+		if ((i + d) > 2147483640)
+			return (-1);
 		if (*eol < 0 && buf[i] == '\n')
 			*eol = i + d;
 		(*line)[i + d] = buf[i]; 
